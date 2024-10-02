@@ -23,6 +23,7 @@ const ENGINES = {
 };
   
 // Global Variables
+const promptSymbol = "$";
 let history = [];
 let searchUrl, searchStr, bookmarks, userIcon, userName;
 let historyIndex = 0;
@@ -30,6 +31,7 @@ let historyIndex = 0;
 // Utility Functions
 const $ = (id) => document.getElementById(id);
 const nl2br = (txt) => txt.replace(/\n/g, " ");
+const validateUrl = (url) => URL.canParse(url);
 const readLocal = (key, defaultValue) => localStorage.getItem(key) || defaultValue;
 const writeLocal = (key, value) => localStorage.setItem(key, value);
 const readBookmarks = () => JSON.parse(localStorage.getItem(LS_KEYS.BOOKMARKS) || JSON.stringify(DEFAULTS.BOOKMARKS));
@@ -40,11 +42,8 @@ const renderName = () => $("name").innerText = userName;
 const renderIcon = () => $("icon").src = userIcon;
 
 const renderSearch = () => {
-    const prePrompt = "search";
-    const promptSymbol = "$";
-
     $("terminal-content").innerHTML = `<div class='prompt-title'>
-      <span class="prePrompt">${prePrompt}</span><span class="atSymb">@</span><span class="promptSearch">${searchStr}</span><span class='prompt-cursor'>${promptSymbol}</span>
+      <span class="promptSearch">${searchStr}</span><span class='prompt-cursor'>${promptSymbol}</span>
     </div>`
 };
 
@@ -56,7 +55,22 @@ const renderInput = () => {
 };
 
 const renderBookmarks = () => {
-    $("bookmarks").innerHTML = Object.entries(bookmarks).map(([category, links]) =>
+    const mainEl = $("content");
+    let bookmarksSection = $("bookmarks");
+
+    if (Object.keys(bookmarks).length === 0) {
+        if (bookmarksSection) mainEl.removeChild(bookmarksSection);
+        return;
+    }
+
+    if (mainEl.children.length === 1) {
+        bookmarksSection = document.createElement("section");
+        bookmarksSection.className = "links";
+        bookmarksSection.id = "bookmarks";
+        mainEl.appendChild(bookmarksSection);
+    }
+
+    bookmarksSection.innerHTML = Object.entries(bookmarks).map(([category, links]) =>
         `<div class="column">
             <h3>${category}</h3>
             ${Object.entries(links).map(([name, url]) => (
@@ -80,15 +94,13 @@ const handleName = (args) => {
 
 const addIcon = (args) => {
     const url = args[0];
-    const validateImageUrl = (url) => /^(https?:\/\/)[\w.-]+(\.[a-z]{2,})+([/?#].*)?$/i.test(url);
 
-    if (validateImageUrl(url)) {
-        userIcon = url;
-        writeLocal(LS_KEYS.ICON, url);
-        renderIcon();
-    } else {
-        alert(`Invalid icon URL. Example: ${COMMANDS.icon.example}`);
+    if (!url || !validateUrl(url)) {
+        return alert(`Invalid icon URL. Example: ${COMMANDS.icon.example}`);
     }
+    userIcon = url;
+    writeLocal(LS_KEYS.ICON, url);
+    renderIcon();
 };
 
 const changeEngine = (args) => {
@@ -114,21 +126,28 @@ const executeSearch = (args) => {
 
 const handleBookmarks = (args) => {
     const [command, category, name, url] = args;
-    if (!category || !name || !url) {
-        alert(`Invalid command. Example: ${COMMANDS.bookmark.example}`);
-        return;
+    if (!category) {
+        return alert(`Category is required. use :help for more info`);
     }
   
-    if (command === "-s") {
-        bookmarks[category] = { ...(bookmarks[category] || {}), [name]: url };
-    } else if (command === "-d") {
-        if (bookmarks[category]) {
-            delete bookmarks[category][name];
-            if (Object.keys(bookmarks[category]).length === 0) delete bookmarks[category];
-        }
-    } else {
-        alert(`Invalid command. Example: ${COMMANDS.bookmark.example}`);
-        return;
+    const categoryBookmarks = bookmarks[category] || {};
+    switch (command) {
+        case "-s":
+            if (!name || !url || !validateUrl(url)) {
+                return alert(`Invalid syntax. Syntax: ${COMMANDS.bookmark.syntax}`);
+            }
+            bookmarks[category] = { ...categoryBookmarks, [name]: url };
+            break;
+        case "-d":
+            if (name) {
+                delete categoryBookmarks[name];
+                if (Object.keys(categoryBookmarks).length === 0) delete bookmarks[category];
+            } else {
+                delete bookmarks[category];
+            }
+            break;
+        default:
+            return alert(`Invalid command. Valid Commands: -s to save, -d to delete`);
     }
   
     writeBookmarks(bookmarks);
@@ -187,7 +206,6 @@ const COMMANDS = {
         func: handleBookmarks,
         syntax: ":bookmark <command> <category> <name> <url>",
         behavior: "Add or remove a bookmark",
-        example: ":bookmark -s Coding Github https://github.com",
     },
     reset: {
         func: resetData,
@@ -221,11 +239,12 @@ const parseCommand = (input) => {
 const runCommand = (cmd) => {
     if (!cmd) return;
 
-    const [command, ...args] = parseCommand(cmd);
+    const str = cmd.trim();
+    const [command, ...args] = parseCommand(str);
     if (COMMANDS[command]) {
         COMMANDS[command].func(args);
     } else {
-        executeSearch([cmd]);
+        executeSearch([str]);
     }
     renderInput();
     focusPrompt();

@@ -20,9 +20,10 @@ const formattedToday = `${months[today.getMonth()]} ${String(today.getDate()).pa
 dateEl.textContent = formattedToday;
 
 // Set greeting based on the current hour
-const greetingMessage = today.getHours() < 12 
-  ? "Good morning, " 
-  : today.getHours() < 18 
-    ? "Good afternoon, " 
-    : "Good evening, ";
+const hours = today.getHours();
+const greetingMessage = hours < 6 || hours >= 18
+  ? "Good evening, "
+  : hours < 12
+    ? "Good morning, "
+    : "Good afternoon, ";
 greetingEl.textContent = greetingMessage;

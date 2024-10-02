@@ -33,13 +33,20 @@ body {
 .time {
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: 0.3rem;
+    font-size: 1.5rem;
 }
+
+/* #clock {
+    font-size: 3.5rem;
+} */
 
 .main-content {
     display: flex;
+    justify-content: center;
     gap: 2rem;
-    margin-bottom: 2rem;
+    margin: 2rem;
 }
 
 img {
@@ -55,11 +62,19 @@ img {
     gap: 1rem;
 }
 
-#name {
+#name, .prompt-title {
     background-color: #a8e1fb;
     color: #120E0E;
-    padding-top: 0.25rem;
-    padding-bottom: 0.25rem;
+}
+
+.prompt-title {
+    border-top-left-radius: 2em;
+    border-bottom-left-radius: 2em;
+    padding: 10px;
+}
+
+h1, .time {
+    align-self: center;
 }
 
 h3 {
@@ -91,7 +106,7 @@ h4 {
 }
 
 input {
-    color: #a8e1fb
+    color: #a8e1fb;
 }
 
 #search-bar {
@@ -99,15 +114,13 @@ input {
 }
 
 input#setter {
-    position: absolute;
+    position: relative;
     outline: none;
     background-color: transparent;
     border: 1px solid red;
     border: none;
-    /* height: 33.8px; */
-    margin-left: 1.9px;
-    /*color: var(--fg);*/
-    width: 370px;
+    padding: 2;
+    width: 100%;
     font-family: var(--fontFamily);
     font-size: var(--fontSize);
     /* caret-color: #a6e3a1;
@@ -126,13 +139,15 @@ input#setter {
     width: 100%;
     flex: 1;
     margin-left: 6px;
-
     font-family: var(--fontFamily);
     font-size: var(--fontSize);
+    overflow: hidden;
+    /* height: 30px; */
 }
 
 #getter {
-    margin: 5px;
+    height: 0;
+    width: 0;
 }
 
 &:focus {
@@ -158,38 +173,17 @@ input#setter {
     display: flex;
 }
 
-#prompt-input {
-    background-color: transparent;
-    border: none;
-    /*color: var(--fg);*/
-    flex-grow: 1;
-    padding: 0.5em;
-    font-family: var(--fontFamily);
-    font-size: var(--fontSize);
-}
-
-#prompt-input:focus {
-    outline: none;
-}
-
-.prompt-title {
-    /*color: var(--search);*/
-    padding: 0.5em 0em;
-}
-
 .prompt-cursor {
     /*color: var(--prompt);*/
     margin-left: 0.3em;
 }
 
-.prompt-text {
-    padding: 0.5em;
-    flex-grow: 1;
-}
-
 .form-group {
     display: flex;
-    /* flex-wrap: wrap; */
+    border: 1px solid #a8e1fb;
+    border-radius: 2rem;
+    margin: 0.5rem;
+    /* font-size: 1rem; */
 }
 
 .atSymb {

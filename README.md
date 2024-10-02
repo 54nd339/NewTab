@@ -6,23 +6,27 @@
 <br>
 
 <p align="center">
-Discover a visually captivating and customizable browser startpage designed to elevate your browsing experience and productivity. This sleek platform offers a range of default themes to match your style, along with a toggleable night-mode for comfortable nighttime browsing. With a personalized search bar, you can easily choose your preferred search engine.
+Discover a visually captivating and customizable browser startpage designed to elevate your browsing experience and productivity. This sleek platform offers a personalized search bar, you can easily choose your preferred search engine.
 </p>
 
 <hr>
 
 ## Features
 - Minimal and stays out of your way, whilst being useful.
-- **Customizable Search Bar:** Search the web using your preferred search engine. Easily switch between search engines by typing `:search <search_engine>` in the input box. All other strings will search the web using the currently selected search engine. Search engines to choose from:
+- **Customizable Search Bar:** Search the web using your preferred search engine. Easily switch between search engines by typing `:searchEng <search_engine>` in the input box. All other strings will search the web using the currently selected search engine. Search engines to choose from:
   - `google`
+  - `youtube`
   - `bing`
   - `ddg`
-- **Multiple Themes:** Choose from 3 beautiful default themes, offering unique aesthetics and styles. To switch themes, type `:theme <theme>` in the input box. Themes to choose from:
-  - `catp` ([Catppuccin](https://github.com/catppuccin/catppuccin))
-  - `aqua` ([Aquarium](https://github.com/FrenzyExists/aquarium-vim))
-  - `light` ([Nord](https://www.nordtheme.com/))
-  - `dark` (defaults to `aqua`)
 - **Quick Access Links:** Conveniently placed beneath the search bar, these links provide easy access to your most frequently visited websites, acting as a lightweight bookmark system.
+- **Edit Quick Links:** Easily add, remove, or modify the quick access links by typing `:bookmark <command> <category> <name> <url>` in the input box. Commands to choose from:
+  - `s` to save a link
+  - `d` to delete a link
+- **Other Commands:** Additional commands to enhance your browsing experience:
+  - `:name <name>` to set your name
+  - `:icon <url>` to change the icon
+  - `:reset` to reset the startpage to its default settings
+  - `:help` to display a list of available commands
 
 
 ## Installation
@@ -30,8 +34,10 @@ Discover a visually captivating and customizable browser startpage designed to e
 Clone or download this repository.
 
 ```bash
-git clone https://github.com/yuuushio/Browser-Startpage.git
+git clone https://github.com/54nd339/NewTab.git
 ```
+
+inspired from ([yuuushio](https://github.com/yuuushio/Browser-Startpage.git))
 
 #### Chromium Browsers:
 
@@ -46,9 +52,3 @@ git clone https://github.com/yuuushio/Browser-Startpage.git
 - Click the gear icon.
 - Select "Install Add-on From File" from dropdown.
 - Locate the cloned repo and select the `.xpi` file.
-
-## Customization
-
-You can further customize the startpage to match your preferences by modifying the `index.html`, `style.css`, and `script.js` files.
-- Add or remove quick access links by editing the index.html file.
-- Add new **themes**, features or modify existing ones by editing the `script.js` file (because I want to be able to change the side image along with the theme).
